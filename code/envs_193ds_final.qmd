@@ -246,7 +246,19 @@ Zenodo. https://doi.org/10.5281/zenodo.8373322
 
 ## j. Calculating model predictions
 
+```{r}
+#| label: model-predictions-600
+
+# predict nest probability at the tallest tree (600 cm) for each ant species
+ggpredict(model1, terms = c("height_cm [600]", "scientific_name"))
+```
+
 ## k. Interpreting results
+
+At the tallest tree height (600 cm), the predicted probability of nest occurence is 0.20 (95% CI: [0.00, 0.99]) for Crematogaster sjostedti, is 0.74 (95% CI: [0.48, 0.90]) for Crematogaster mimosae, and is 1.00 (95% CI: [1.00, 1.00]) for Crematogaster nigriceps (Figure 1). As tree height increases, the probability of nest occurrence generally increases, though the strength of this relationship depends on the ant 
+species. It is strongest for Crematogaster nigriceps, intermediate for Crematogaster mimosae, and weakest for Crematogaster sjostedti This means birds 
+are most likely to nest in tall trees with Crematogaster nigriceps and Crematogaster mimosae, 
+and rarely nest in trees with Crematogaster sjostedti. Biologically, this shows the protection from predators: Crematogaster mimosae and Crematogaster nigriceps will aggressively defend host trees, so birds benefit from nesting in these trees.
 
 # Problem 3. Affective and exploratory visualizations
 
