@@ -35,11 +35,21 @@ library(janitor)
 
 In part 1, they used a binomial generalized linear model (aka logistic). The response is a binary outcome: the probability of American Avocet microhabitat use (it either is used or it is not). The predictor is distance to water edge, so it is continuous. This makes sense to use a binomial GLM to test whether a continuous predictor variable relates to a binary response.
 
+<br>
+
 In part 2, the used a chi-square test. Both the response (habitat type, 5 levels) and the predictor (bird species, 3 levels) variables are categorical. It makes sense to use chi-square because they seeing if a relationship exists between categories. 
 
 ## b. Suggestions for rewriting
 
+Part 1: The probability that American Avocet's use microhabitat depends on how far the microhabitat is from the water's edge
+
+<br>
+
+Part 2: There is a difference in the habitats that the three bird species (American Avocet, Forster's Tern, and Black-necked Stilt) use, so there are some species that are found in certain habitats more than others.
+
 ## c. Further analysis
+
+An additional variable that might influence the probability of American Avocet microhabitat use is the **water depth**. This is a continuous variable, measured in centimeters with a marked pole. As with most wading birds, American Avocets primarily feed by sweeping their bills through the water. It is thus likely that a microhabitat with shallower water will be used more than one with deep water, as it is easier to feed in.
 
 # Problem 2. Data analysis
 
