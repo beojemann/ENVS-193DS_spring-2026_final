@@ -7,10 +7,13 @@ on a personal research project about dinner-cooking time.
 
 ## Data and file information
 
-- `data/nest_data_final.csv`: bird nest occupancy data (Lujan, et al. 2023)
-- `data/193ds_personal_project.csv`: personal dinner-cooking time data
-- `code/envs_193ds_final.qmd`: Quarto source file with complete analysis
-- `code/envs_193ds_final.pdf`: rendered PDF output
-
+ENVS-193DS_spring-2026_final
+├── code                                   # all code is in the code folder
+│   ├── envs_193ds_final.qmd               # Quarto source for all analyses
+│   └── envs_193ds_final.pdf               # rendered PDF output
+├── data                                   # all data is in the data folder
+│   ├── nest_data_final.csv                # nest occupancy data (Lujan et al. 2023)
+│   └── 193ds_personal_project.csv         # personal dinner cook time data
+└──  README.md
 ## Rendered output
 [View rendered PDF](https://github.com/beojemann/ENVS-193DS_spring-2026_final/blob/main/code/envs_193ds_final.pdf)
