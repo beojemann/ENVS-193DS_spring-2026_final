@@ -23,8 +23,14 @@ Created repository, added description and README
 library(tidyverse)
 library(here)
 library(janitor)
+library(DHARMa)
+library(ggeffects)
+library(MuMIn)
+library(scales)
 
 # read in nest observation data
+
+nests <- read_csv(here("data", "nest_data_final.csv"))
 
 # read in personal dinner cooking data
 ```
@@ -53,13 +59,59 @@ An additional variable that might influence the probability of American Avocet m
 
 # Problem 2. Data analysis
 
+
+
 ## a. Clean and wrangle
+
+
+```{r}
+#| label: clean-and-wrangle
+
+# create new object using nest data frame
+nests_clean <- nests |> 
+  # keep only the Crematogaster ant species 
+  filter(ant_species %in% c("AB", "RRB", "BBR")) |> 
+  # create new column with the full scientific name
+  mutate(scientific_name = case_match(
+    ant_species,
+    "AB" ~ "Crematogaster sjostedti",
+    "RRB" ~ "Crematogaster mimosae",
+    "BBR" ~ "Crematogaster nigriceps"
+  )) |> 
+  # set the level order
+  mutate(scientific_name = as_factor(scientific_name),
+         scientific_name = fct_relevel(scientific_name,
+                                       "Crematogaster sjostedti",
+                                       "Crematogaster mimosae",
+                                       "Crematogaster nigriceps")) |> 
+  # keep the three relevant columns 
+  select(case_control, height_cm, scientific_name)
+
+# display the structure of the cleaned data frame
+str(nests_clean)
+
+# show 10 random rows
+slice_sample(nests_clean, n = 10)
+```
 
 ## b. Response variable
 
+The 1s and 0s in the "case_control" column tell if a tree had a bird nest or not. A 1 means the tree was observed to have one and the 0 meant the tree was an available tree without a nest.
+
 ## c. Purpose of study
 
+**Tree height** is a continuous variable measured in centimeters. As the tree height increases, the probability of a nest occuring should increase too, because it physically places a nest farther up from the ground and its predators. The paper did find that the probability of a bird nesting in a tree increased with height, as described in the *Results* section, *second* paragraph.
+
+<br>
+
+**Acacia ant species** is a categorical variable with three levels (C. sjostedti, C. mimosae, and C. nigriceps). It makes sense that the probability of nest occurring should depend on the ant species present in a tree. Trees that are defended by more aggressive ant species are more likely to have a nest because of the protection it will receive. The paper highlights this in the *Discussion* section, *first* paragraph.  
+
 ## d. Table of models
+
+| Model number | Model description                                                              |
+|:------------:|:-------------------------------------------------------------------------------|
+| 1            | tree height and ant species as predictors, with an interaction term            |
+| 2            | tree height and ant species as predictors, without an interaction term         |
 
 ## e. Running the models
 
