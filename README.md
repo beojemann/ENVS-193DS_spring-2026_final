@@ -7,6 +7,7 @@ on a personal research project about dinner-cooking time.
 
 ## Data and file information
 
+```
 ENVS-193DS_spring-2026_final
 ├── code                                   # all code is in the code folder
 │   ├── envs_193ds_final.qmd               # Quarto source for all analyses
@@ -15,5 +16,7 @@ ENVS-193DS_spring-2026_final
 │   ├── nest_data_final.csv                # nest occupancy data (Lujan et al. 2023)
 │   └── 193ds_personal_project.csv         # personal dinner cook time data
 └──  README.md
+```
+
 ## Rendered output
 [View rendered PDF](https://github.com/beojemann/ENVS-193DS_spring-2026_final/blob/main/code/envs_193ds_final.pdf)
