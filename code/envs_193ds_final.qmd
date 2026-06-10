@@ -10,7 +10,7 @@ execute:
   warning: false
 ---
 
-# [GitHub repository](https://github.com/beojemann/ENVS-193DS_spring-2026_final)
+# [Link to GitHub repository](https://github.com/beojemann/ENVS-193DS_spring-2026_final)
 
 # Set Up
 
@@ -46,7 +46,7 @@ In part 1, they used a binomial generalized linear model (aka logistic). The res
 
 <br>
 
-In part 2, the used a chi-square test. Both the response (habitat type, 5 levels) and the predictor (bird species, 3 levels) variables are categorical. It makes sense to use chi-square because they seeing if a relationship exists between categories. 
+In part 2, they used a chi-square test. Both the response (habitat type, 5 levels) and the predictor (bird species, 3 levels) variables are categorical. It makes sense to use chi-square because they're seeing if a relationship exists between categories. 
 
 ## b. Suggestions for rewriting
 
@@ -135,7 +135,7 @@ model1 <- glm(
 # model 2: effect of tree height and ant species on nest presence 
 # w/o interaction term
 model2 <- glm(
-  # formula: response ~ variable + interaction variable
+  # formula: response ~ variable + variable
   case_control ~ height_cm + scientific_name,
   # use clean data frame
   data = nests_clean,
@@ -163,7 +163,7 @@ The best model, according to Akaike's Information Criterion (AIC) uses tree heig
 
 ```{r}
 #| label: checking-diagnostics
-#| fig-width: 11
+#| fig-width: 12
 #| fig-height: 7
 
 # simulate residuals and plot diagnostics
@@ -259,7 +259,7 @@ ggpredict(model1, terms = c("height_cm [600]", "scientific_name"))
 ## k. Interpreting results
 
 At the tallest tree height (600 cm), the predicted probability of nest occurence is 0.20 (95% CI: [0.00, 0.99]) for Crematogaster sjostedti, is 0.74 (95% CI: [0.48, 0.90]) for Crematogaster mimosae, and is 1.00 (95% CI: [1.00, 1.00]) for Crematogaster nigriceps (Figure 1). As tree height increases, the probability of nest occurrence generally increases, though the strength of this relationship depends on the ant 
-species. It is strongest for Crematogaster nigriceps, intermediate for Crematogaster mimosae, and weakest for Crematogaster sjostedti This means birds 
+species. It is strongest for Crematogaster nigriceps, intermediate for Crematogaster mimosae, and weakest for Crematogaster sjostedti. This means birds 
 are most likely to nest in tall trees with Crematogaster nigriceps and Crematogaster mimosae, 
 and rarely nest in trees with Crematogaster sjostedti. Biologically, this shows the protection from predators: Crematogaster mimosae and Crematogaster nigriceps will aggressively defend host trees, so birds benefit from nesting in these trees.
 
@@ -267,11 +267,11 @@ and rarely nest in trees with Crematogaster sjostedti. Biologically, this shows 
 
 ## a. Comparing visualizations
 
-- The exploratory plots from Homework 2 represents the dinner cook time literally: each dinner is a point sitting at its exact value on the x-axis, with the means marked so the numbers can be read directly. My affective visualization represents just the average cook times, encoding the length and intensity of each cook through the height and density of the meal illustrations laid out in a weekly planner. Exploratory was all data, but the other has more emotion and feeling. 
+- The exploratory plots from Homework 2 represents the dinner cook time literally: each dinner is a point sitting at its exact day on the x-axis, with the means marked so the numbers can be read directly. My affective visualization represents just the average cook times, while encoding the length and intensity of each cook through the height and density of the meal illustrations laid out in a weekly planner. Exploratory was all data, but the other has more emotion and feeling. 
 
 - All of my visualizations use the same dinner cooking dataset, and all of them organized the cook time around the structure of the week, making the similar patterns show up even more. The visuals that had cook time on the vertical/y-axis specifically made me think about adjusting the height of a stacked meal in a planner column for affective visualization.
 
-- The visualizations show the same patterns: cook times tend to be longer on weekends and on more involved days. They are lighter on rushed weekdays, but nights with a helper also tended to run longer no matter the day. The affective piece communicates that pattern through my variables of "exhaustion level" and "time constraint" rather than their exact values, so it reads as a rhythm instead of a measurement.
+- The visualizations show the same patterns: cook times tend to be longer on weekends and on more involved days. They are lighter on rushed weekdays, but nights with a helper also tended to run longer no matter the day. The affective piece simply communicates that pattern through density of objects and height rather than their exact values, so it reads as a rhythm instead of just some measurement.
 
 - In Workshop 9 I got feedback that my original hand-drawn plan would be hard to finish cleanly in the time I had, and that a digital format would let the audience understand more. I took that suggestion and rebuilt the planner in Canva, which let me keep the same idea (meal complexity and stack height standing in for cook time and stress) but I could have the columns more legible and have consistent styles.
 
@@ -281,11 +281,102 @@ My response variable is dinner cook time, which is continuous and measured in mi
 
 ## c. Checking assumptions and running analysis
 
+```{r}
+
+# clean and prep cooking data for the analysis
+cooking_clean <- cooking |> 
+  # keep only the columns I need
+  select(cook_time, helpers) |> 
+  # drop rows missing either value
+  drop_na() |> 
+  # label the two helper levels (only ever 0 or 1)
+  mutate(helpers = factor(helpers,
+                          levels = c(0, 1),
+                          labels = c("No helper", "Helper")))
+
+# normality: QQ plot of cook time within each helper group
+ggplot(data = cooking_clean,
+       mapping = aes(sample = cook_time)) +
+  geom_qq_line(color = "black") +            
+  geom_qq(color = "dodgerblue3") +      
+  facet_wrap(~ helpers) +                    
+  labs(x = "Theoretical quantiles",
+       y = "Sample quantiles (cook time, minutes)") +
+  theme_bw()
+
+# equal variance: F-test comparing the two groups' variances
+var.test(cook_time ~ helpers, data = cooking_clean)
+
+```
+I checked normality visually with QQ plots for each group. For no helper, the points fall reasonably along the line with some deviation at the upper tail, so normality is accepted. For 1 helper, it is a little less tight, but more consistently tracking the line. I tested equal variances with an F-test (F = 0.56, p = 0.33). Because p>0.05 I fail to reject equal variances, so assumption was met. I will run Welch's two-sample t-test. Finally, observations were independent because each value is a separate dinner cooked on a different night.
+
+```{r}
+
+# Welch's two-sample t-test
+t.test(cook_time ~ helpers,
+       data = cooking_clean,
+       var.equal = FALSE)
+
+```
+```{r}
+
+# Cohen's d effect size
+cohens_d(cooking_clean, cook_time ~ helpers)
+
+```
+
+
 ## d. Creating a visualization
+
+```{r}
+
+# group means and standard errors for the overlay
+cooking_summary <- cooking_clean |> 
+  group_by(helpers) |> 
+  # get mean, then alculated se
+  summarize(mean_time = mean(cook_time),            
+            se_time = sd(cook_time) / sqrt(n())) |> 
+  ungroup()
+
+# base layer: cook time by helper presence
+ggplot(data = cooking_clean,
+       mapping = aes(x = helpers,
+                     y = cook_time,
+                     color = helpers)) +
+  # raw data
+  geom_jitter(width = 0.15, height = 0,
+              alpha = 0.6, size = 2) +
+  # standard error bars around each mean
+  geom_errorbar(data = cooking_summary,
+                inherit.aes = FALSE,
+                aes(x = helpers,
+                    ymin = mean_time - se_time,
+                    ymax = mean_time + se_time),
+                width = 0.15, color = "black") +
+  # group mean points
+  stat_summary(geom = "point", fun = mean,
+               size = 3, color = "black") +
+  # custom colors
+  scale_color_manual(values = c("No helper" = "darkorange",
+                                "Helper" = "dodgerblue4")) +
+  # label axes with units
+  labs(x = "Helper presence",
+       y = "Dinner cook time (minutes)") +
+  # non-default theme, remove gridlines, no legend
+  theme_bw() +
+  theme(panel.grid = element_blank(),
+        legend.position = "none")
+
+```
 
 ## e. Writing a caption
 
+Figure 2. Dinner cook time (minutes) on nights cooked alone versus nights with a helper present. Colored points show individual dinners (orange = no helper, blue =  a helper). Black points show the mean cook time for each group and black error bars show +/- 1 standard error from the mean.
+
 ## f. Writing about results
+
+
+I used a Welch's two-sample t-test to compare mean dinner cook time between nights cooked alone and nights with a helper present. Cook time was significantly higher with a helper (mean = 29.0 min) than when done alone (mean = 17.3 min) for dinner (Welch's t(23.97) = −3.53, p = 0.0017, $\alpha$ = 0.05). The effect size was large (Cohen's d = −1.35), indicating that helper presence is associated with a meaningful increase in cook time.
 
 ## g. Sharing affective visualization
 
