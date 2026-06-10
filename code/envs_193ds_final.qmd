@@ -115,7 +115,43 @@ The 1s and 0s in the "case_control" column tell if a tree had a bird nest or not
 
 ## e. Running the models
 
+```{r}
+#| label: running-the-models
+
+# model 1: effect of tree height and ant species on nest presence w/ interaction term
+model1 <- glm(
+  # formula: response ~ variable * variable
+  case_control ~ height_cm * scientific_name,
+  # use clean data frame
+  data = nests_clean,
+  # binomial family for response
+  family = "binomial"
+)
+
+# model 2: interaction between tree height and ant species on nest presence w/o interaction term
+model2 <- glm(
+  # formula: response ~ variable + interaction variable
+  case_control ~ height_cm + scientific_name,
+  # use clean data frame
+  data = nests_clean,
+  # binomial family for response
+  family = "binomial"
+)
+```
+
+
 ## f. Selecting the best model
+
+```{r}
+#| label: model-selection
+
+# compare models using AICc
+AICc(model1, 
+     model2) |> 
+  arrange(AICc)
+```
+
+
 
 ## g. Checking the diagnostics
 
