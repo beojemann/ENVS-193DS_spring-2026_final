@@ -65,7 +65,7 @@ An additional variable that might influence the probability of American Avocet m
 
 
 
-## a. Clean and wrangle
+## a. Cleaning and wrangling
 
 
 ```{r}
@@ -91,7 +91,7 @@ nests_clean <- nests |>
   # keep the three relevant columns 
   select(case_control, height_cm, scientific_name)
 
-# display the structure of the cleaned data frame
+# show structure of the cleaned data frame
 str(nests_clean)
 
 # show 10 random rows
@@ -104,7 +104,7 @@ The 1s and 0s in the "case_control" column tell if a tree had a bird nest or not
 
 ## c. Purpose of study
 
-**Tree height** is a continuous variable measured in centimeters. As the tree height increases, the probability of a nest occuring should increase too, because it physically places a nest farther up from the ground and its predators. The paper did find that the probability of a bird nesting in a tree increased with height, as described in the *Results* section, *second* paragraph.
+**Tree height** is a continuous variable measured in centimeters. As the tree height increases, the probability of a nest occurring should increase too, because it physically places a nest farther up from the ground and its predators. The paper did find that the probability of a bird nesting in a tree increased with height, as described in the *Results* section, *second* paragraph.
 
 <br>
 
@@ -301,15 +301,15 @@ ggplot(data = cooking_clean,
   geom_qq_line(color = "black") +            
   geom_qq(color = "dodgerblue3") +      
   facet_wrap(~ helpers) +                    
-  labs(x = "Theoretical quantiles",
-       y = "Sample quantiles (cook time, minutes)") +
+  labs(x = "",
+       y = "") +
   theme_bw()
 
 # equal variance: F-test comparing the two groups' variances
 var.test(cook_time ~ helpers, data = cooking_clean)
 
 ```
-I checked normality visually with QQ plots for each group. For no helper, the points fall reasonably along the line with some deviation at the upper tail, so normality is accepted. For 1 helper, it is a little less tight, but more consistently tracking the line. I tested equal variances with an F-test (F = 0.56, p = 0.33). Because p>0.05 I fail to reject equal variances, so assumption was met. I will run Welch's two-sample t-test. Finally, observations were independent because each value is a separate dinner cooked on a different night.
+I checked normality visually using the QQ plots, for each group. For no helper, the points fall reasonably along the line with some deviation at the upper tail, so normality is accepted. For 1 helper, it is a little less tight, but more consistently tracking the line. I tested equal variances with an F-test (F = 0.56, p = 0.33). Because p>0.05 I fail to reject equal variances, so assumption was met. I will run Welch's two-sample t-test. Finally, observations were independent because each value is a separate dinner cooked on a different night.
 
 ```{r}
 
@@ -334,7 +334,7 @@ cohens_d(cooking_clean, cook_time ~ helpers)
 # group means and standard errors for the overlay
 cooking_summary <- cooking_clean |> 
   group_by(helpers) |> 
-  # get mean, then alculated se
+  # get mean, then manual calculation of se
   summarize(mean_time = mean(cook_time),            
             se_time = sd(cook_time) / sqrt(n())) |> 
   ungroup()
@@ -381,4 +381,4 @@ I used a Welch's two-sample t-test to compare mean dinner cook time between nigh
 
 ## g. Sharing affective visualization
 
-Present in class.
+Complete.
