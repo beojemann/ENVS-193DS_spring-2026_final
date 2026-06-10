@@ -34,6 +34,7 @@ library(rstatix)
 nests <- read_csv(here("data", "nest_data_final.csv"))
 
 # read in personal dinner cooking data
+
 cooking <- read_csv(here("data", "193ds_personal_project.csv")) |> 
   clean_names()
 ```
