@@ -118,7 +118,8 @@ The 1s and 0s in the "case_control" column tell if a tree had a bird nest or not
 ```{r}
 #| label: running-the-models
 
-# model 1: effect of tree height and ant species on nest presence w/ interaction term
+# model 1: effect of tree height and ant species on nest presence 
+# w/ interaction term
 model1 <- glm(
   # formula: response ~ variable * variable
   case_control ~ height_cm * scientific_name,
@@ -128,7 +129,8 @@ model1 <- glm(
   family = "binomial"
 )
 
-# model 2: interaction between tree height and ant species on nest presence w/o interaction term
+# model 2: effect of tree height and ant species on nest presence 
+# w/o interaction term
 model2 <- glm(
   # formula: response ~ variable + interaction variable
   case_control ~ height_cm + scientific_name,
@@ -151,9 +153,19 @@ AICc(model1,
   arrange(AICc)
 ```
 
+The best model, according to Akaike's Information Criterion (AIC) uses tree height and acacia ant species as predictors of the probability of bird nest occurrence *with* an interaction.
 
 
 ## g. Checking the diagnostics
+
+```{r}
+#| label: checking-diagnostics
+#| fig-width: 11
+#| fig-height: 7
+
+# simulate residuals and plot diagnostics
+plot(simulateResiduals(model1))
+```
 
 ## h. Visualizing model predictions
 
