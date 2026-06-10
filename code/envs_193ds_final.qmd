@@ -27,12 +27,15 @@ library(DHARMa)
 library(ggeffects)
 library(MuMIn)
 library(scales)
+library(rstatix)
 
 # read in nest observation data
 
 nests <- read_csv(here("data", "nest_data_final.csv"))
 
 # read in personal dinner cooking data
+cooking <- read_csv(here("data", "193ds_personal_project.csv")) |> 
+  clean_names()
 ```
 
 # Problem 1. Research writing
@@ -264,7 +267,17 @@ and rarely nest in trees with Crematogaster sjostedti. Biologically, this shows 
 
 ## a. Comparing visualizations
 
+- The exploratory plots from Homework 2 represents the dinner cook time literally: each dinner is a point sitting at its exact value on the x-axis, with the means marked so the numbers can be read directly. My affective visualization represents just the average cook times, encoding the length and intensity of each cook through the height and density of the meal illustrations laid out in a weekly planner. Exploratory was all data, but the other has more emotion and feeling. 
+
+- All of my visualizations use the same dinner cooking dataset, and all of them organized the cook time around the structure of the week, making the similar patterns show up even more. The visuals that had cook time on the vertical/y-axis specifically made me think about adjusting the height of a stacked meal in a planner column for affective visualization.
+
+- The visualizations show the same patterns: cook times tend to be longer on weekends and on more involved days. They are lighter on rushed weekdays, but nights with a helper also tended to run longer no matter the day. The affective piece communicates that pattern through my variables of "exhaustion level" and "time constraint" rather than their exact values, so it reads as a rhythm instead of a measurement.
+
+- In Workshop 9 I got feedback that my original hand-drawn plan would be hard to finish cleanly in the time I had, and that a digital format would let the audience understand more. I took that suggestion and rebuilt the planner in Canva, which let me keep the same idea (meal complexity and stack height standing in for cook time and stress) but I could have the columns more legible and have consistent styles.
+
 ## b. Designing an analysis
+
+My response variable is dinner cook time, which is continuous and measured in minutes. The predictor I am using is helper presence, a categorical variable with two levels (no helper and helper). To answer whether having a helper changes how long dinner takes to cook, I will run a two-sample t-test comparing mean cook time between the two groups. A t-test is appropriate here because I am comparing the means of a continuous response across exactly two levels of a categorical predictor, which is the exact situation a two-sample t-test is built for. 
 
 ## c. Checking assumptions and running analysis
 
@@ -275,3 +288,5 @@ and rarely nest in trees with Crematogaster sjostedti. Biologically, this shows 
 ## f. Writing about results
 
 ## g. Sharing affective visualization
+
+Present in class.
